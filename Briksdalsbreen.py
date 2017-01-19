@@ -12,7 +12,7 @@ alpha_m=3.0
 length=20000.
 g=9.81
 rho=917.
-
+ #Hallo Joris
 
 def Bs(length):
     return (-1.0/2.0*Beta*s*length**2+Beta*((alpha_m/(1+v*s))*length**0.5+b_0-E)*length)
@@ -59,7 +59,7 @@ for i in range(int(20000.0/T_step)):
    bed=np.append(bed,b(x))
    ice=np.append(ice,h)
    x=x+1
-   print H
+   print(H)
    
    
 
