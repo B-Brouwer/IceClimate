@@ -12,7 +12,7 @@ alpha_m=3.0
 length=20000.
 g=9.81
 rho=917.
- #Hallo Joris
+
 
 def Bs(length):
     return (-1.0/2.0*Beta*s*length**2+Beta*((alpha_m/(1+v*s))*length**0.5+b_0-E)*length)
@@ -37,43 +37,42 @@ plt.show()
 
 plt.plot(bed)
 plt.show()
-length1=20000.
+length1=30000.
 def tau(x):
     return (200.0/1.15)*((1.0-(abs(x/length1-0.5)/0.5)**3.0)+0.15)
 
 def b(x):
-    if(100.0*np.exp(-(x/5000.00)**2)< 0.01):
-        return(0.01)
-    else:
-        return(100.0*np.exp(-(x/5000.00)**2))
-        
-print(b(1000),b(15000))
+    return 200.0*np.exp(-(x/8000.0)**2)
 
+hoogtelijst = np.array([1930,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800,600,500,400])
+lengtelijst = np.array([0,2000,4500,5500,6250,6500,6750,7000,7125,7525,7825,8025,8275,8525,8775])
+plt.plot(lengtelijst, hoogtelijst)
+plt.show()
 #def H(x):
-#    return tau(x)/(rho*g)*(1.0/(h*(x+1)-h(x)))
+#    return tau(x)/(rho*g)*(1.0/(h*(x+1)-h)
 x=0
 h=500.
 H=5.
 Height=np.array([])
 bed=np.array([])
 ice=np.array([])
-for i in range(int(20000.0/T_step)):
-   H=tau(x)/(rho*g)*(1.0/abs(-b(x)-H+h))
+for i in range(int(length1/T_step)):
+   if (-b(x)-H+h)/T_step>0.01:
+       f=-b(x)-H+h
+   else:
+       f=0.01
+   H=tau(x)/(rho*g)*(1.0/(f))
    h=b(x)+H 
    Height=np.append(Height,H)
    bed=np.append(bed,b(x))
    ice=np.append(ice,h)
    x=x+1
 
-   
-#git pull origin master
-#git commit -m "commit"
-#git push origin -m "ik heb iets aangepast"
-   
-   
-#
-#plt.plot(ice)
-#plt.plot(bed)
-lengte =np.arange(0, 20000,1)
-plt.plot(b(lengte))
+plt.plot(ice)
+plt.plot(bed)
 plt.show()
+#gufiasfa
+#git pull origin master -m "hallo"
+#git commit -m "hallo"
+#git push origin master -m "hallo"
+
