@@ -42,7 +42,12 @@ def tau(x):
     return (200.0/1.15)*((1.0-(abs(x/length1-0.5)/0.5)**3.0)+0.15)
 
 def b(x):
-    return 100.0*np.exp(-x/5000.0)
+    if(100.0*np.exp(-(x/5000.00)**2)< 0.01):
+        return(0.01)
+    else:
+        return(100.0*np.exp(-(x/5000.00)**2))
+        
+print(b(1000),b(15000))
 
 #def H(x):
 #    return tau(x)/(rho*g)*(1.0/(h*(x+1)-h(x)))
@@ -59,10 +64,16 @@ for i in range(int(20000.0/T_step)):
    bed=np.append(bed,b(x))
    ice=np.append(ice,h)
    x=x+1
-   print(H)
-   
-   
 
-plt.plot(ice)
-plt.plot(bed)
+   
+#git pull origin master
+#git commit -m "commit"
+#git push origin -m "ik heb iets aangepast"
+   
+   
+#
+#plt.plot(ice)
+#plt.plot(bed)
+lengte =np.arange(0, 20000,1)
+plt.plot(b(lengte))
 plt.show()
