@@ -1,5 +1,7 @@
 import numpy as np
+from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+import math as m
 
 T_step=1.
 
@@ -12,7 +14,8 @@ alpha_m=3.0
 length=20000.
 g=9.81
 rho=917.
-
+length1=30000.
+tau0 = 150E3
 
 def Bs(length):
     return (-1.0/2.0*Beta*s*length**2+Beta*((alpha_m/(1+v*s))*length**0.5+b_0-E)*length)
@@ -37,9 +40,10 @@ plt.show()
 
 plt.plot(bed)
 plt.show()
-length1=30000.
 def tau(x):
-    return (200.0/1.15)*((1.0-(abs(x/length1-0.5)/0.5)**3.0)+0.15)
+    delta = 0.15
+    taum = 150000
+    return (taum/(1+delta))*(1.0-(abs(x/(length1/3.)-0.5)/0.5)**3.0+delta)
 
 def b(x):
     return 200.0*np.exp(-(x/8000.0)**2)
@@ -67,11 +71,50 @@ for i in range(int(length1/T_step)):
    bed=np.append(bed,b(x))
    ice=np.append(ice,h)
    x=x+1
-
-plt.plot(ice)
-plt.plot(bed)
+   
+def H(lengtearray,hoogtearray):
+    Harray = np.array([])
+    hoogte = 0.
+    Harray = np.append(Harray, tau(lengtearray[0])/(rho*g)*(1.0/((-(hoogtearray[1]-hoogtearray[0]))/(lengtearray[1]-lengtearray[0]))))
+    for i in range(0, len(lengtearray)-1):
+        hoogte = tau(hoogtearray[i])/(rho*g)*(1.0/((-(hoogtearray[i+1]-hoogtearray[i]))/(lengtearray[i+1]-lengtearray[i])))
+        Harray = np.append(Harray,hoogte)
+    return Harray
+    
+def bed(lengtearray, hoogtearray):
+    bedarray = np.array([])
+    bed = 0.
+    for i in range(0, len(lengtearray)):
+        bed = hoogtearray[i]- H(lengtearray,hoogtearray)[i]
+        bedarray = np.append(bedarray, bed)
+    return bedarray
+    
+#print(bed(lengtelijst,hoogtelijst))    
+print(H(lengtelijst, hoogtelijst))
+plt.plot(lengtelijst, bed(lengtelijst,hoogtelijst))
+plt.plot(lengtelijst, hoogtelijst, color = "green")
 plt.show()
-#gufiasfa
+
+def Gaussian(x, *p):
+    A, mu, sigma = p
+    return A*np.exp(-(x-mu)**2/(2.*sigma**2))
+    
+p0 = [1930., 0.,4000.]
+
+coeff, var_matrix = curve_fit(Gaussian,lengtelijst, hoogtelijst, p0 = p0) 
+fit = Gaussian(np.arange(0,10000, 10), *coeff)
+plt.plot(lengtelijst, hoogtelijst)
+plt.plot(np.arange(0,10000, 10), fit, color = 'red')
+plt.show()
+print('Fitted mean = ', coeff[1])
+print('Fitted standard deviation = ', coeff[2])
+
+#plt.plot(ice)
+#plt.plot(bed)
+#plt.show()
+
+
+
 #git pull origin master -m "hallo"
 #git commit -m "hallo"
 #git push origin master -m "hallo"
