@@ -109,6 +109,45 @@ plt.show()
 print('Fitted mean = ', coeff[1])
 print('Fitted standard deviation = ', coeff[2])
 
+def namaakbed(lengte):
+    bedhoogte = 0.
+    array = np.array([])
+    if(type(lengte) == type(5.) or type(lengte) == type(5)):
+        if (lengte < 1700.):
+            bedhoogte = 1600.
+        elif (1700. <= lengte < 3500.):
+            bedhoogte = 1600. + Gaussian(lengte, -600., 2600., 300.)
+        elif (3500. <=lengte < 6000.):
+            bedhoogte = 1475.
+        elif (6000. <= lengte < 7200.):
+            bedhoogte = -lengte*(1475-900.)/(7400-6000)+3939.
+        elif (lengte >= 7400):
+            bedhoogte = 900 + Gaussian(lengte, 600, 7400, 400.)
+        return bedhoogte
+    elif('numpy' in str(type(lengte))):
+        for el in range(0,len(lengte)):
+            if (0 <= lengte[el] < 1700.):
+                bedhoogte = 1600.
+            elif (1700. <= lengte[el] < 3500.):
+                bedhoogte = 1600. + Gaussian(lengte[el], -600., 2500., 600.)
+            elif (3500. <=lengte[el] < 6000.):
+                bedhoogte = 1475.
+            elif (6000. <= lengte[el] < 7400.):
+                bedhoogte = -lengte[el]*(1475-900.)/(7400-6000)+3939.
+            elif (lengte[el] >= 7400):
+                bedhoogte = 300 + Gaussian(lengte[el], 600, 7400, 400.)
+            array = np.append(array, bedhoogte)
+            bedhoogte = 0.
+        return array
+    else:
+        print("Geef een array of int/float op.")
+
+print(np.polyfit([6000,7400],[1475,900],1))
+lijstlengtes = np.arange(0, 10000,10)
+plt.plot(lijstlengtes,namaakbed(lijstlengtes))
+plt.ylim(0, 1700)
+plt.show()
+
 #plt.plot(ice)
 #plt.plot(bed)
 #plt.show()
