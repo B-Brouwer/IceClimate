@@ -35,11 +35,11 @@ for i in range(int(2000/T_step)):
         E=3000.
     bed=np.append(bed,Bs(length)/length)
 
-plt.plot(L)
-plt.show()
-
-plt.plot(bed)
-plt.show()
+#plt.plot(L)
+#plt.show()
+#
+#plt.plot(bed)
+#plt.show()
 def tau(x):
     delta = 0.15
     taum = 150000
@@ -50,8 +50,8 @@ def b(x):
 
 hoogtelijst = np.array([1930,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800,600,500,400])
 lengtelijst = np.array([0,2000,4500,5500,6250,6500,6750,7000,7125,7525,7825,8025,8275,8525,8775])
-plt.plot(lengtelijst, hoogtelijst)
-plt.show()
+#plt.plot(lengtelijst, hoogtelijst)
+#plt.show()
 #def H(x):
 #    return tau(x)/(rho*g)*(1.0/(h*(x+1)-h)
 x=0
@@ -90,10 +90,10 @@ def bed(lengtearray, hoogtearray):
     return bedarray
     
 #print(bed(lengtelijst,hoogtelijst))    
-print(H(lengtelijst, hoogtelijst))
-plt.plot(lengtelijst, bed(lengtelijst,hoogtelijst))
-plt.plot(lengtelijst, hoogtelijst, color = "green")
-plt.show()
+#print(H(lengtelijst, hoogtelijst))
+#plt.plot(lengtelijst, bed(lengtelijst,hoogtelijst))
+#plt.plot(lengtelijst, hoogtelijst, color = "green")
+#plt.show()
 
 def Gaussian(x, *p):
     A, mu, sigma = p
@@ -101,51 +101,99 @@ def Gaussian(x, *p):
     
 p0 = [1930., 0.,4000.]
 
-coeff, var_matrix = curve_fit(Gaussian,lengtelijst, hoogtelijst, p0 = p0) 
-fit = Gaussian(np.arange(0,10000, 10), *coeff)
-plt.plot(lengtelijst, hoogtelijst)
-plt.plot(np.arange(0,10000, 10), fit, color = 'red')
-plt.show()
-print('Fitted mean = ', coeff[1])
-print('Fitted standard deviation = ', coeff[2])
+#coeff, var_matrix = curve_fit(Gaussian,lengtelijst, hoogtelijst, p0 = p0) 
+#fit = Gaussian(np.arange(0,10000, 10), *coeff)
+#plt.plot(lengtelijst, hoogtelijst)
+#plt.plot(np.arange(0,10000, 10), fit, color = 'red')
+#plt.show()
+#print('Fitted mean = ', coeff[1])
+#print('Fitted standard deviation = ', coeff[2])
 
-def namaakbed(lengte):
+def namaakbed(lengt):
     bedhoogte = 0.
-    array = np.array([])
-    if(type(lengte) == type(5.) or type(lengte) == type(5)):
-        if (lengte < 1700.):
+    erree = np.array([])
+    if(type(lengt) == type(5.) or type(lengt) == type(5) or 'numpy.int' in str(type(lengt))):
+        if (lengt < 1700.):
             bedhoogte = 1600.
-        elif (1700. <= lengte < 3500.):
-            bedhoogte = 1600. + Gaussian(lengte, -600., 2600., 300.)
-        elif (3500. <=lengte < 6000.):
+        elif (1700. <= lengt < 3500.):
+            bedhoogte = 1600. + Gaussian(lengt, -600., 2600., 300.)
+        elif (3500. <=lengt < 6000.):
             bedhoogte = 1475.
-        elif (6000. <= lengte < 7200.):
-            bedhoogte = -lengte*(1475-900.)/(7400-6000)+3939.
-        elif (lengte >= 7400):
-            bedhoogte = 900 + Gaussian(lengte, 600, 7400, 400.)
+        elif (6000. <= lengt < 7400.):
+            bedhoogte = -lengt*(1475-900.)/(7400-6000)+3939.
+        elif (lengt >= 7400):
+            bedhoogte = 300 + Gaussian(lengt, 600, 7400, 400.)
         return bedhoogte
-    elif('numpy' in str(type(lengte))):
-        for el in range(0,len(lengte)):
-            if (0 <= lengte[el] < 1700.):
+    elif('numpy' in str(type(lengt))):
+        for el in range(0,len(lengt)):
+            if (0 <= lengt[el] < 1700.):
                 bedhoogte = 1600.
-            elif (1700. <= lengte[el] < 3500.):
-                bedhoogte = 1600. + Gaussian(lengte[el], -600., 2500., 600.)
-            elif (3500. <=lengte[el] < 6000.):
+            elif (1700. <= lengt[el] < 3500.):
+                bedhoogte = 1600. + Gaussian(lengt[el], -600., 2500., 600.)
+            elif (3500. <=lengt[el] < 6000.):
                 bedhoogte = 1475.
-            elif (6000. <= lengte[el] < 7400.):
-                bedhoogte = -lengte[el]*(1475-900.)/(7400-6000)+3939.
-            elif (lengte[el] >= 7400):
-                bedhoogte = 300 + Gaussian(lengte[el], 600, 7400, 400.)
-            array = np.append(array, bedhoogte)
+            elif (6000. <= lengt[el] < 7400.):
+                bedhoogte = -lengt[el]*(1475-900.)/(7400-6000)+3939.
+            elif (lengt[el] >= 7400):
+                bedhoogte = 300 + Gaussian(lengt[el], 600, 7400, 400.)
+            erree = np.append(erree, bedhoogte)
             bedhoogte = 0.
-        return array
+        return erree
     else:
         print("Geef een array of int/float op.")
-
 print(np.polyfit([6000,7400],[1475,900],1))
+ijshoogte1 = np.polyfit([0,6250],[1930,1500],1)
+ijshoogte2 = np.polyfit([6250,8775],[1500,400],1)
+
+def ijshoogte(lengt):
+    hoogte = 0.
+    if(lengt < 6250.):
+        hoogte = ijshoogte1[0]*lengt + ijshoogte1[1]
+    elif(6250. <= lengt < 8775.):
+        hoogte = ijshoogte2[0]*lengt + ijshoogte2[1]
+    elif(lengt >= 8775):
+        hoogte = -0.01*lengt + 400
+    return hoogte
+    
+def ijsdikte(lengt):
+    erree = np.array([])
+    lengt = np.asarray(lengt)
+    dikte = 0.
+    for el in range(len(lengt)):
+        dikte = ijshoogte(lengt[el]) - namaakbed(lengt[el])
+        erree = np.append(erree, dikte)
+    return erree
+
+def S(lengt, breedte):
+    erree = np.array([])
+    lengt = np.asarray(lengt)
+    labda = 1.
+    breedte1 = breedte
+    for el in range(len(lengt)):
+        if(lengt[el] <= 6250):
+            labda = 0.
+            if(2000 < lengt[el] <= 6250):
+                breedte = 4* breedte1
+            else:
+                breedte = breedte1
+        else:
+            labda = 1.
+        
+        erree = np.append(erree,ijsdikte(lengt)[el]*(breedte + labda*ijsdikte(lengt)[el]))
+    return erree
+    
 lijstlengtes = np.arange(0, 10000,10)
 plt.plot(lijstlengtes,namaakbed(lijstlengtes))
-plt.ylim(0, 1700)
+plt.plot(lengtelijst,hoogtelijst, color = "green")
+plt.plot(np.arange(0,6250,10), ijshoogte1[0]*np.arange(0,6250,10) +ijshoogte1[1], color = 'red')
+plt.plot(np.arange(6250,8775,10), ijshoogte2[0]*np.arange(6250,8775,10) +ijshoogte2[1], color = 'red')
+plt.ylim(0, 2000)
+plt.grid()
+plt.show()
+
+plt.plot(lijstlengtes,ijsdikte(lijstlengtes))
+plt.plot(np.arange(0, 10000, 100), S(np.arange(0, 10000,100), 300))
+plt.grid()
 plt.show()
 
 #plt.plot(ice)
